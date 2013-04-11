@@ -2,12 +2,12 @@
 
 class GeneradorPlanes {
     
-    public $clientes;
-    public $tramos;
-    public $almacenes;
-    public $fabrica;
+    protected $clientes;
+    protected $tramos;
+    protected $almacenes;
+    protected $fabrica;
     
-    public $planes;
+    protected $planes;
 
     public function __construct($clientes, $tramos, $almacenes, $fabrica) {
         $this->clientes = $clientes;
@@ -22,20 +22,35 @@ class GeneradorPlanes {
     }
     
     /**
-     * Gera Rutas directas desde la fábrica hasta cada cliente, sin usar almacenes
+     * Genera Rutas directas desde la fábrica hasta cada cliente, sin usar almacenes
      */
     private function _generarPlanesDirectos(){
-        $tramosPorCliente = array();
-        foreach($this->clientes as $cliente){
-            $tramos = $this->_getTramosByNodos($this->fabrica, $cliente);
-            if(empty($tramos)){
-                throw new Exception("No hay tramos para {$this->fabrica->nombre} -> {$cliente->nombre}");
+        $tramosPorCliente = $this->_getTramosPorCliente();
+        
+        foreach ($tramosPorCliente as $cliente => $tramos){
+            echo $cliente . ' => ' . PHP_EOL;
+            foreach ($tramos as  $tramo){
+                echo  $tramo;
             }
-            $tramosPorCliente[$cliente->nombre] = $tramos;
-            
         }
+        
     }
     
+    protected function _getTramosPorCliente(){
+        $tramosPorCliente = array();
+        
+        foreach($this->clientes as $cliente){
+            $tramos = $this->_getTramosPorNodos($this->fabrica, $cliente);
+            if(empty($tramos)){
+                throw new Exception("No hay tramos para {$this->getFabrica()->getNombre()} -> {$cliente->getNombre()}");
+            }
+            $tramosPorCliente[$cliente->getNombre()] = $tramos;
+            
+        }
+        return $tramosPorCliente;
+    }
+
+
     public function addPlan(PlanDistribucion $plan){
         $this->planes[] = $plan;
     }
@@ -46,10 +61,30 @@ class GeneradorPlanes {
      * @param Nodo $b
      * @return array Tramo[]
      */
-    private function _getTramosByNodos(Nodo $a, Nodo $b){
+    protected function _getTramosPorNodos(Nodo $a, Nodo $b){
         return $a->getTramosPara($b);
     }
     
     
+    
+    
+    
+    public function getClientes() {
+        return $this->clientes;
+    }
+
+    public function getTramos() {
+        return $this->tramos;
+    }
+
+    public function getAlmacenes() {
+        return $this->almacenes;
+    }
+
+    public function getFabrica() {
+        return $this->fabrica;
+    }
+
+
     
 }

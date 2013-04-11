@@ -2,7 +2,7 @@
 
 class Cliente extends Nodo {
 
-    public $consumo;
+    protected $consumo;
     
     public function __construct($nombre, $consumo = null) {
         parent::__construct($nombre);
@@ -13,12 +13,16 @@ class Cliente extends Nodo {
         return sprintf('%25s Consumo: %4s Tn/sem', '['.__CLASS__.':'.$this->nombre.']', $this->consumo) . PHP_EOL;
     }
     
-    public function getCosto(array $tramos){
+    public function calcCosto(array $tramos){
         $costo = 0;
         foreach ($tramos as $tramo) {
             $costo += $tramo->getCosto($this);
         }
         return $costo;
+    }
+    
+    public function getConsumo(){
+        return $this->consumo;
     }
     
 }

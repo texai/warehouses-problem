@@ -9,52 +9,72 @@ class Tramo {
      *
      * @var Nodo
      */
-    public $a;
+    protected $a;
 
     /**
      *
      * @var Nodo
      */
-    public $b;
+    protected $b;
 
     /**
      *
      * @var MedioTransporte
      */
-    public $medioTransporte;
+    protected $medioTransporte;
 
     /**
      *
      * @var int
      */
-    public $distancia;
+    protected $distancia;
     
     public function __construct(Nodo $a, Nodo $b, MedioTransporte $medioTransporte, $distancia) {
         $this->a = $a;
-        $this->a->tramos[$b->nombre] = $b;
         $this->b = $b;
-        $this->b->tramos[$a->nombre] = $a;
         $this->medioTransporte = $medioTransporte;
         $this->distancia = $distancia;
+        $this->a->addTramo($this);
+        $this->b->addTramo($this);
+//        $this->a->tramos[$b->getNombre()] = $b;
+//        $this->b->tramos[$a->getNombre()] = $a;
+        
     }
     
+    public function getA() {
+        return $this->a;
+    }
+
+    public function getB() {
+        return $this->b;
+    }
+
+    public function getMedioTransporte() {
+        return $this->medioTransporte;
+    }
+
+    public function getDistancia() {
+        return $this->distancia;
+    }
+
+        
     public function __toString() {
         return sprintf(
             '%8s %10s <=> %-10s (%6s): %4s Km.',
             '['.__CLASS__.']',
-            $this->a->nombre,
-            $this->b->nombre,
-            $this->medioTransporte->nombre,
+            $this->a->getNombre(),
+            $this->b->getNombre(),
+            $this->medioTransporte->getNombre(),
             $this->distancia) . PHP_EOL
         ;
     }
     
     public function getCosto(Cliente $cliente) {
         return 
-            $this->medioTransporte->costoFijo +
-            $this->distancia * $this->medioTransporte->costoVariable * $cliente->consumo +
-            (($this->b instanceof Almacen) ? $this->b->costoFijo : 0 ) +
-            (($this->b instanceof Almacen) ? $this->b->costoVariable * $cliente->consumo : 0) 
+            $this->medioTransporte->getCostoFijo() +
+            $this->distancia * $this->medioTransporte->getCostoVariable() * $cliente->getConsumo() +
+            (($this->b instanceof Almacen) ? $this->b->getCostoFijo() : 0 ) +
+            (($this->b instanceof Almacen) ? $this->b->getCostoVariable() * $cliente->getConsumo() : 0) 
         ;
     }
     

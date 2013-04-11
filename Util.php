@@ -2,8 +2,8 @@
 
 class Util {
     
-    private static $memStart;
-    private static $timeStart;
+    protected static $memStart;
+    protected static $timeStart;
 
 
     public static function bmStart(){

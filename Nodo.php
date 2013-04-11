@@ -2,23 +2,28 @@
 
 abstract class Nodo {
     
-    public $nombre;
-    public $tramos;
+    protected $nombre;
+    
+    protected $tramos;
     
     public function __construct($nombre) {
         $this->nombre = $nombre;
         $this->tramos = array();
     }
     
+    public function getNombre(){
+        return $this->nombre;
+    }
+    
     public function addTramo(Tramo $tramo){
-        if($this->nombre===$tramo->a->nombre){
-            $nodoLocal = $tramo->a;
-            $nodoRemoto = $tramo->b;
-        }elseif($this->nombre===$tramo->b->nombre){
-            $nodoLocal = $tramo->b;
-            $nodoRemoto = $tramo->a;
+        if($this->nombre===$tramo->getA()->nombre){
+            $nodoLocal = $tramo->getA();
+            $nodoRemoto = $tramo->getB();
+        }elseif($this->nombre===$tramo->getB()->nombre){
+            $nodoLocal = $tramo->getB();
+            $nodoRemoto = $tramo->getA();
         }else{
-            throw new Exception("Nodo '{$this->nombre}' no participa del tramo '{$tramo->a->nombre} - {$tramo->b->nombre}'");
+            throw new Exception("Nodo '{$this->nombre}' no participa del tramo '{$tramo->getA()->nombre} - {$tramo->getB()->nombre}'");
         }
         
         
@@ -26,18 +31,18 @@ abstract class Nodo {
             $this->tramos[$nodoRemoto->nombre] = array();
         }
         
-        if(array_key_exists($tramo->medioTransporte->nombre, $this->tramos[$nodoRemoto->nombre])){
+        if(array_key_exists($tramo->getMedioTransporte()->getNombre(), $this->tramos[$nodoRemoto->getNombre()])){
             throw new Exception(sprintf(
                 "Ya existe un tramo para '%s - %s' en '%s'. Distancias: Anterior: %s, Nueva: %s.",
                 $nodoLocal->nombre,
                 $nodoRemoto->nombre,
-                $tramo->medioTransporte->nombre,
-                $this->tramos[$nodoRemoto->nombre][$tramo->medioTransporte->nombre]->distancia,
-                $tramo->distancia
+                $tramo->getMedioTransporte()->getNombre(),
+                $this->tramos[$nodoRemoto->nombre][$tramo->getMedioTransporte()->getNombre()]->getDistancia(),
+                $tramo->getDistancia()
                         
             ));
         }
-        $this->tramos[$nodoRemoto->nombre][$tramo->medioTransporte->nombre] = $tramo;
+        $this->tramos[$nodoRemoto->nombre][$tramo->getMedioTransporte()->getNombre()] = $tramo;
     }
     
     public function getTramosPara(Nodo $nodo){

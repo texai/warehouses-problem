@@ -8,10 +8,18 @@
  */
 class RutaCliente {
 
-    public $cliente;
-    public $tramos;
+    protected $cliente;
+    protected $tramos;
     
-    public function __construct($cliente, array $tramos = null) {
+    /**
+     * 
+     * @param Cliente $cliente
+     * @param array|Tramo $tramos
+     */
+    public function __construct(Cliente $cliente, $tramos) {
+        if($tramos instanceof Tramo){
+            $tramos = array($tramos);
+        }
         $this->cliente = $cliente;
         $this->tramos = array();
         if (!empty($tramos)){
@@ -21,11 +29,19 @@ class RutaCliente {
         }
     }
     
+    public function getCliente() {
+        return $this->cliente;
+    }
+
+    public function getTramos() {
+        return $this->tramos;
+    }
+
     public function addTramo(Tramo $tramo){
         $this->tramos[] = $tramo;
     }
     
-    public function getCosto() {
+    public function calcCosto() {
         $costo = 0;
         foreach ($this->tramos as $tramo) {
             $costo += $tramo->getCosto($this->cliente);

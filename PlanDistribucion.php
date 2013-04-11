@@ -6,7 +6,7 @@
  */
 class PlanDistribucion {
 
-    public $rutasCliente;
+    protected $rutasCliente;
     
     public function __construct() {
         $this->rutasCliente = array();
@@ -16,14 +16,14 @@ class PlanDistribucion {
         $this->rutasCliente[] = $rutaCliente;
     }
     
-    public function getCosto() {
+    public function calcCosto() {
         if(!$this->esValido()){
             throw new Exception('Plan de distribución No Válido');
         }
         
         $costo = 0;
         foreach ($this->rutasCliente as $rutaCliente) {
-            $costo += $rutaCliente->getCosto();
+            $costo += $rutaCliente->calcCosto();
         }
         return $costo;
     }

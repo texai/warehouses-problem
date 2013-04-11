@@ -40,6 +40,9 @@ $tramos[6] = new Tramo($lima, $pacasmayo, $camion, 700);
 $tramos[7] = new Tramo($lima, $cartavio, $camion, 640);
 $tramos[8] = new Tramo($lima, $motupe, $camion, 920);
 $tramos[9] = new Tramo($lima, $reque, $camion, 680);
+$tramos[] = new Tramo($lima, $pacasmayo, $barco, 987);
+$tramos[] = new Tramo($lima, $pacasmayo, $tren, 876);
+$tramos[] = new Tramo($lima, $cartavio, $tren, 873);
 //foreach ($tramos as $item) {echo $item;}
 
 $planSinAlmacenes = new PlanDistribucion();
@@ -55,10 +58,37 @@ $planConAlmacenes->addRuta(new RutaCliente($clientes[2], array($tramos[3], $tram
 $planConAlmacenes->addRuta(new RutaCliente($clientes[3], array($tramos[3], $tramos[5])));
 
 echo PHP_EOL;
-echo $planSinAlmacenes->getCosto().PHP_EOL;
-echo $planConAlmacenes->getCosto().PHP_EOL;
+echo $planSinAlmacenes->calcCosto().PHP_EOL;
+echo $planConAlmacenes->calcCosto().PHP_EOL;
 
 $genPlan = new GeneradorPlanes($clientes, $tramos, $almacenes, $lima);
 $genPlan->generarPlanes();
 
+
 Util::printBenchMark();
+
+array(
+    1 => array(1,2,3),
+    2 => array(4,5),
+    3 => array(6),
+    4 => array(7),
+);
+
+array(
+    array(1,4,6,7),
+    array(1,5,6,7),
+    array(2,4,6,7),
+    array(2,5,6,7),
+    array(3,4,6,7),
+    array(3,5,6,7),
+);
+
+
+
+
+
+
+
+
+
+
